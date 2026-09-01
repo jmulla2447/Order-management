@@ -16,7 +16,7 @@ import java.net.URI;
 @RequestMapping("/api/v1/management")
 public class OrderController {
 
-    private OrderService service;
+    final private OrderService service;
 
     public OrderController(OrderService service) {
         this.service = service;

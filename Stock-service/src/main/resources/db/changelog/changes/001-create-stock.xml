@@ -6,23 +6,19 @@
         http://www.liquibase.org/xml/ns/dbchangelog
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="001" author="yourname">
+    <changeSet id="001" author="jack.2447">
 
-        <createTable tableName="orders">
+        <createTable tableName="stocks">
 
-            <column name="order_id" type="string">
+            <column name="stock_id" type="string">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
 
-            <column name="quantity" type="INT">
+            <column name="stock_quantity" type="INT">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="price" type="decimal(18,2)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="order_date" type="TIMESTAMP"/>
+            <column name="update_date" type="TIMESTAMP"/>
 
         </createTable>
 
