@@ -13,11 +13,11 @@ public class OrderMapping {
     public static OrderEvent mapping(Order order) {
         order.setOrderId(UUID.randomUUID().toString());
         order.setOrderDate(new Date());
-        return OrderEvent.builder().order(order).status(OrderStatus.INITIALED)
+        return OrderEvent.builder().eventId(UUID.randomUUID()).order(order).status(OrderStatus.INITIALED)
                 .message("Order is created and Stock need to reduce").build();
     }
 
-    public static OrderEntity entityMapping(Order order){
-        return new OrderEntity(order.getOrderId(), (int)order.getOrderQuantity(), order.getOrderPrice(), order.getOrderDate());
+    public static OrderEntity entityMapping(OrderEvent event){
+        return new OrderEntity(event.getOrder().getOrderId(), (int)event.getOrder().getOrderQuantity(), event.getOrder().getOrderPrice(), event.getOrder().getOrderDate(), event.getEventId().toString());
     }
 }
