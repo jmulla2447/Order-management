@@ -6,14 +6,13 @@ import org.mulla.in.order.service.controller.OrderMapping;
 import org.mulla.in.order.service.repository.OrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.TransientDataAccessException;
-import org.springframework.kafka.KafkaException;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.resilience.annotation.Retryable;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ExecutionException;
@@ -36,22 +35,19 @@ public class OrderService {
     }
 
     @Retryable(
-            includes = KafkaSendFailedException.class,
-            maxRetries = 2,
-            delay = 1000,
-            multiplier = 2.0
+            retryFor = KafkaSendFailedException.class,
+            maxAttempts = 2,
+            backoff = @Backoff(delay = 2, multiplier = 1.2)
     )
     public void sendToKafka(OrderEvent event) {
-
-        Message<OrderEvent> message = MessageBuilder
-                .withPayload(event)
+        Message<OrderEvent> message = MessageBuilder.withPayload(event)
                 .setHeader(KafkaHeaders.TOPIC, topic.name())
+                .setHeader(KafkaHeaders.KEY, event.getOrder().getOrderId()) // same order → same partition
                 .build();
 
         try {
             kafkaTemplate.send(message).get(5, TimeUnit.SECONDS);
-        }
-        catch (TimeoutException | ExecutionException | InterruptedException e) {
+        } catch (TimeoutException | ExecutionException | InterruptedException e) {
 
             if (e instanceof InterruptedException) {
                 Thread.currentThread().interrupt();
@@ -63,6 +59,12 @@ public class OrderService {
             );
         }
     }
+
+    public void msgRecover(KafkaSendFailedException ex){
+        LOGGER.info(" Event Recover {} — skipping", ex.getMessage());
+        //create a dead letter queue
+    }
+
     public void orderCreate(OrderEvent event) {
 
         String eventId = event.getEventId().toString();

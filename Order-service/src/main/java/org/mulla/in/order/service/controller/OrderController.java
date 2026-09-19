@@ -22,7 +22,7 @@ public class OrderController {
         this.service = service;
     }
 
-    @PostMapping(value = "orders", consumes = MediaType.APPLICATION_JSON_VALUE,  produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "orders", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity orderCreate(@RequestBody Order order) {
         service.orderCreate(OrderMapping.mapping(order));
         return ResponseEntity.created(URI.create("/orders/status")).build();

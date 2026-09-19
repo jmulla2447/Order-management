@@ -17,7 +17,7 @@ public class OrderMapping {
                 .message("Order is created and Stock need to reduce").build();
     }
 
-    public static OrderEntity entityMapping(OrderEvent event){
-        return new OrderEntity(event.getOrder().getOrderId(), (int)event.getOrder().getOrderQuantity(), event.getOrder().getOrderPrice(), event.getOrder().getOrderDate(), event.getEventId().toString());
+    public static OrderEntity entityMapping(OrderEvent event) {
+        return new OrderEntity(event.getOrder().getOrderId(), (int) event.getOrder().getOrderQuantity(), event.getOrder().getOrderPrice(), event.getOrder().getOrderDate(), event.getEventId().toString());
     }
 }

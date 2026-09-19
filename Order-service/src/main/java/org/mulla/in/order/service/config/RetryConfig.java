@@ -1,9 +1,9 @@
 package org.mulla.in.order.service.config;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.annotation.EnableKafkaRetryTopic;
+import org.springframework.retry.annotation.EnableRetry;
 
 @Configuration
-@EnableKafkaRetryTopic
+@EnableRetry
 public class RetryConfig {
 }

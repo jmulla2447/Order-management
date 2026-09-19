@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @Builder
@@ -15,6 +16,6 @@ public class Order {
     private String orderId;
     private long orderQuantity;
     private BigDecimal orderPrice;
-    private Date orderDate =  new Date();
+    private Date orderDate = new Date();
 
 }
